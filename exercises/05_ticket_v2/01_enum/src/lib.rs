@@ -1,21 +1,39 @@
 // TODO: use `Status` as type for `Ticket::status`
 //   Adjust the signature and implementation of all other methods as necessary.
 
+use core::fmt;
+use std::str::FromStr;
+
 #[derive(Debug, PartialEq)]
 // `derive`s are recursive: it can only derive `PartialEq` if all fields also implement `PartialEq`.
 // Same holds for `Debug`. Do what you must with `Status` to make this work.
 struct Ticket {
     title: String,
     description: String,
-    status: String,
+    status: Status,
 }
 
+#[derive(PartialEq, Debug, Clone, Copy)]
 enum Status {
     // TODO: add the missing variants
+    ToDo,
+    InProgress,
+    Done
+}
+
+impl From<String> for Status {
+    fn from(value: String) -> Self {
+        match &value[..] {
+            "ToDo"       => Status::ToDo,
+            "InProgress" => Status::InProgress,
+            "Done"       => Status::Done,
+            _            => Status::ToDo
+        }
+    }
 }
 
 impl Ticket {
-    pub fn new(title: String, description: String, status: String) -> Ticket {
+    pub fn new(title: String, description: String, status: Status) -> Ticket {
         if title.is_empty() {
             panic!("Title cannot be empty");
         }
@@ -28,14 +46,14 @@ impl Ticket {
         if description.len() > 500 {
             panic!("Description cannot be longer than 500 bytes");
         }
-        if status != "To-Do" && status != "In Progress" && status != "Done" {
-            panic!("Only `To-Do`, `In Progress`, and `Done` statuses are allowed");
-        }
+        // if status != "To-Do" && status != "In Progress" && status != "Done" {
+        //     panic!("Only `To-Do`, `In Progress`, and `Done` statuses are allowed");
+        // }
 
         Ticket {
             title,
             description,
-            status,
+            status
         }
     }
 
@@ -47,8 +65,8 @@ impl Ticket {
         &self.description
     }
 
-    pub fn status(&self) -> &String {
-        &self.status
+    pub fn status(&self) -> Status {
+        self.status
     }
 }
 
@@ -86,7 +104,7 @@ mod tests {
         let ticket2 = Ticket {
             title: title.clone(),
             description: "description2".to_string(),
-            status,
+            status
         };
         assert_ne!(ticket1, ticket2);
     }
