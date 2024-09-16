@@ -54,16 +54,12 @@ impl Ticket {
         }
 
         // TODO: Parse the status string into a `Status` enum.
-        match Status::try_from(status) {
-            Ok(status) => Ok(Ticket {
-                title,
-                description,
-                status,
-            }),
-            Err(parse_err) => Err(TicketNewError::InvalidStatus(parse_err)),
-        }
-
-        
+        let status = Status::try_from(status)?;
+        Ok(Ticket{
+            title,
+            description,
+            status
+        })
     }
 }
 
