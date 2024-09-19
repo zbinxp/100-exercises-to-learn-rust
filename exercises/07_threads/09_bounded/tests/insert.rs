@@ -1,5 +1,6 @@
 use bounded::data::{Status, TicketDraft};
 use bounded::launch;
+use bounded::store::TicketId;
 use ticket_fields::test_helpers::{ticket_description, ticket_title};
 
 #[test]
